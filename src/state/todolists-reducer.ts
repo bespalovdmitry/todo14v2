@@ -3,10 +3,7 @@ import {Dispatch} from "redux";
 
 
 export type SetTodoLists = ReturnType<typeof setTodoListsAC>
-export type RemoveTodolistActionType = {
-    type: 'REMOVE-TODOLIST',
-    id: string
-}
+export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
 export type AddTodolistType = ReturnType<typeof addTodolistAC>
 export type ChangeTodolistTitleActionType = {
     type: 'CHANGE-TODOLIST-TITLE',
@@ -40,7 +37,7 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
             return action.todoLists.map(tl => ({...tl, filter: "all"}))
         }
         case 'REMOVE-TODOLIST': {
-            return state.filter(tl => tl.id !== action.id)
+            return state.filter(tl => tl.id !== action.todolistId)
         }
         case 'ADD-TODOLIST': {
             return [{...action.todolist, filter: 'all'}, ...state]
@@ -66,8 +63,8 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
     }
 }
 
-export const removeTodolistAC = (todolistId: string): RemoveTodolistActionType => {
-    return {type: 'REMOVE-TODOLIST', id: todolistId}
+export const removeTodolistAC = (todolistId: string) => {
+    return {type: 'REMOVE-TODOLIST', todolistId} as const
 }
 export const addTodolistAC = (todolist: TodolistType) => {
     return {type: 'ADD-TODOLIST', todolist} as const
@@ -98,6 +95,13 @@ export const addTodolistTC = (title: string) => {
         todolistsAPI.createTodolist(title)
             .then(res => dispatch(addTodolistAC(res.data.data.item)))
 
+    }
+}
+
+export const removeTodoListTC = (todoListId: string) => {
+    return (dispatch: Dispatch) => {
+        todolistsAPI.deleteTodolist(todoListId)
+            .then(() => dispatch(removeTodolistAC(todoListId)))
     }
 }
 
