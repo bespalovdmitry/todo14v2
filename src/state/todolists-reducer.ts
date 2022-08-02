@@ -89,7 +89,6 @@ export const fetchTodoListsTC = () => {
           .then(res => dispatch(setTodoListsAC(res.data)))
     }
 }
-
 export const addTodolistTC = (title: string) => {
     return (dispatch: Dispatch) => {
         todolistsAPI.createTodolist(title)
@@ -97,11 +96,9 @@ export const addTodolistTC = (title: string) => {
 
     }
 }
-
 export const removeTodoListTC = (todoListId: string) => {
     return (dispatch: Dispatch) => {
         todolistsAPI.deleteTodolist(todoListId)
             .then(() => dispatch(removeTodolistAC(todoListId)))
     }
 }
-
